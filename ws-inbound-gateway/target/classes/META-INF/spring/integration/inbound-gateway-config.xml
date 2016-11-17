@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-ws="http://www.springframework.org/schema/integration/ws"
+	xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xsi:schemaLocation="http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/integration/ws http://www.springframework.org/schema/integration/ws/spring-integration-ws.xsd">
+
+	<int:channel id="input" />
+	<int:channel id="input1" />
+
+	<int-ws:inbound-gateway id="ws-inbound-gateway"
+		request-channel="input" />
+	<int-ws:inbound-gateway id="ws-inbound-gateway1"
+		request-channel="input1" />
+
+	<oxm:jaxb2-marshaller id="marshaller"
+		context-path="xpadro.spring.ws.courses.types"  />
+
+	<int:service-activator input-channel="input">
+		<bean class="org.springframework.integration.samples.ws.SimpleEchoResponder" />
+
+		<!-- <bean class="xpadro.spring.ws.courses.endpoint.CourseEndpoint"/> -->
+
+	</int:service-activator>
+
+	<int:service-activator input-channel="input1">
+		<bean class="org.springframework.integration.samples.ws.CourseEndpointSA" />
+	</int:service-activator>
+
+</beans>
